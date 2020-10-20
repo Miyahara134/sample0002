@@ -60,45 +60,48 @@ int WINAPI WinMain(
 	if (!RegisterClass(&exeWinc)) return 1;
 
 	TCHAR str1[128] = TEXT("処理開始指示");
-	on_button = MessageBox(NULL, str1,
-		TEXT("処理開始"), MB_OKCANCEL | MB_ICONQUESTION);
 
-	if (on_button == IDOK) {
-		//処理中画面を作成(子ウィンドウ)
-		HWND exeWnd = CreateWindow(
-			TEXT("EXEC"),		//ウィンドウクラス名
-			cExec,				//ウィンドウ名
-			WS_CAPTION,			//ウィンドウスタイル
-			CW_USEDEFAULT,		//初期位置（ｘ）
-			CW_USEDEFAULT,		//初期位置（ｙ）
-			CW_USEDEFAULT,		//横幅
-			CW_USEDEFAULT,		//縦幅
-			NULL,
-			NULL,
-			hInstance,
-			NULL
-		);
+	while (1) {
+		on_button = MessageBox(NULL, str1,
+			TEXT("処理開始"), MB_OKCANCEL | MB_ICONQUESTION);
 
-		//処理中画面の作成に失敗したとき
-		if (exeWnd == NULL) {
+		if (on_button == IDOK) {
+			//処理中画面を作成(子ウィンドウ)
+			HWND exeWnd = CreateWindow(
+				TEXT("EXEC"),		//ウィンドウクラス名
+				cExec,				//ウィンドウ名
+				WS_CAPTION,			//ウィンドウスタイル
+				CW_USEDEFAULT,		//初期位置（ｘ）
+				CW_USEDEFAULT,		//初期位置（ｙ）
+				CW_USEDEFAULT,		//横幅
+				CW_USEDEFAULT,		//縦幅
+				NULL,
+				NULL,
+				hInstance,
+				NULL
+			);
+
+			//処理中画面の作成に失敗したとき
+			if (exeWnd == NULL) {
+				return 0;
+			}
+
+			//処理中ダイアログを表示@最大化
+			ShowWindow(exeWnd, SW_SHOWMAXIMIZED);
+
+			//3秒待つ
+			Sleep(3000);
+
+			//処理中ダイアログをクローズ
+			ShowWindow(exeWnd, SW_HIDE);
+
+			//完了画面の表示
+			MessageBox(NULL, TEXT("処理終了"), TEXT("完了"), MB_OK);
+		}
+		else {
+			//プログラム終了
 			return 0;
 		}
-
-		//処理中ダイアログを表示@最大化
-		ShowWindow(exeWnd, SW_SHOWMAXIMIZED);
-
-		//3秒待つ
-		Sleep(3000);
-
-		//処理中ダイアログをクローズ
-		ShowWindow(exeWnd, SW_HIDE);
-
-		//完了画面の表示
-		MessageBox(NULL, TEXT("処理終了"), TEXT("完了"), MB_OK);
-	}
-	else {
-		//プログラム終了
-		return 0;
 	}
 	return 0;
 }
